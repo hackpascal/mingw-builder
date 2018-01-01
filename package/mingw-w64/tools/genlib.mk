@@ -5,7 +5,7 @@ PACKAGE_SOURCE_DIR=$(MINGW_W64_SOURCE_DIR)/$(NAME)-$(MINGW_W64_PACKAGE_CATEGORY)
 PACKAGE_BUILD_DIR=$(MINGW_W64_BUILD_DIR)/$(MINGW_W64_PACKAGE_NAME)
 
 CONFIGURE_ARGS= \
-	--prefix=$(OUTPUT_PREFIX) \
+	--prefix=$(PREFIX) \
 	$(if $(HOST),--host=$(HOST)) \
 	--with-mangle=$(HOST_OUTPUT_PREFIX)
 
@@ -31,7 +31,7 @@ build: configure
 
 install: build
 	[ -f $(PACKAGE_BUILD_DIR)/.installed ] || ( \
-		$(MAKE) -C $(PACKAGE_BUILD_DIR) install && \
+		$(MAKE) -C $(PACKAGE_BUILD_DIR) install DESTDIR=$(INSTALL_DESTDIR) && \
 		touch $(PACKAGE_BUILD_DIR)/.installed \
 	)
 
