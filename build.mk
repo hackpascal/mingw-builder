@@ -129,7 +129,7 @@ mingw-w64-headers: dir-prep mingw-w64-tools gcc-initial
 gcc-initial: gmp mpfr mpc isl cloog binutils
 	$(MAKE) -C $(PACKAGEDIR)/gcc STAGE=initial
 else
-mingw-w64-headers: dir-prep
+mingw-w64-headers: dir-prep mingw-w64-tools
 	$(MAKE) -C $(PACKAGEDIR)/mingw-w64 PART=headers
 endif
 
