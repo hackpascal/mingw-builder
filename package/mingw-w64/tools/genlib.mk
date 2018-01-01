@@ -18,6 +18,7 @@ configure:
 		cd $(PACKAGE_BUILD_DIR); \
 		CFLAGS="$(PKG_CFLAGS)" \
 		LDFLAGS="$(PKG_LDFLAGS) -L$(HOST_OUTPUT_PREFIX)/lib" \
+		$(TARGET_CONFIGURE_VARS) \
 		$(HOST_CONFIGURE_ENVS) \
 			$(PACKAGE_SOURCE_DIR)/configure $(CONFIGURE_ARGS) && \
 		touch $(PACKAGE_BUILD_DIR)/.configured \

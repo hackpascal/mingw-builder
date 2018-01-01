@@ -72,6 +72,10 @@ endif
 export PKG_CFLAGS:=$(TARGET_CFLAGS)
 export PKG_LDFLAGS:=$(TARGET_LDFLAGS)
 export CONFIGURE_ENVS := $(TARGET_CONFIGURE_ENVS)
+
+export TARGET_CONFIGURE_VARS := \
+		ac_cv_func_malloc_0_nonnull=yes \
+		ac_cv_func_realloc_0_nonnull=yes
 else
 $(error Invalid BUILD_TYPE)
 endif
