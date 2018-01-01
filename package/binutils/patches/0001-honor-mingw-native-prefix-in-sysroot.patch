@@ -1,0 +1,34 @@
+--- a/ld/ldmain.c
++++ b/ld/ldmain.c
+@@ -572,6 +572,31 @@ get_relative_sysroot (const char *from A
+   char *path;
+   struct stat s;
+ 
++#ifdef MINGW_NATIVE_PREFIX
++  char *path_mingw;
++  size_t len_sysroot, len_prefix;
++
++  len_sysroot = strlen (TARGET_SYSTEM_ROOT);
++  len_prefix = strlen (MINGW_NATIVE_PREFIX);
++
++  path_mingw = (char *) xmalloc (len_sysroot + len_prefix + 2);
++
++  strcpy (path_mingw, TARGET_SYSTEM_ROOT);
++  if (path_mingw[len_sysroot - 1] == '/')
++    path_mingw[len_sysroot - 1] = 0;
++
++  strcat(path_mingw, MINGW_NATIVE_PREFIX);
++
++  path = make_relative_prefix (program_name, from, path_mingw);
++  free (path_mingw);
++  if (path)
++    {
++      if (stat (path, &s) == 0 && S_ISDIR (s.st_mode))
++	return path;
++      free (path);
++    }
++#endif
++
+   path = make_relative_prefix (program_name, from, TARGET_SYSTEM_ROOT);
+   if (path)
+     {

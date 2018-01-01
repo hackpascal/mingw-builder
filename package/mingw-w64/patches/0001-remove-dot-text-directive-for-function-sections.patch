@@ -1,0 +1,31 @@
+--- a/mingw-w64-crt/crt/crtexe.c
++++ b/mingw-w64-crt/crt/crtexe.c
+@@ -176,7 +176,7 @@ int WinMainCRTStartup (void)
+     "\t.seh_handlerdata\n"
+     "\t.long 1\n"
+     "\t.rva .l_startw, .l_endw, _gnu_exception_handler ,.l_endw\n"
+-    "\t.text"
++    ".section .text$WinMainCRTStartup"
+     );
+ #endif
+   mingw_app_type = 1;
+@@ -204,7 +204,7 @@ int mainCRTStartup (void)
+     "\t.seh_handlerdata\n"
+     "\t.long 1\n"
+     "\t.rva .l_start, .l_end, _gnu_exception_handler ,.l_end\n"
+-    "\t.text"
++    ".section .text$mainCRTStartup"
+     );
+ #endif
+   mingw_app_type = 0;
+--- a/mingw-w64-libraries/winpthreads/src/thread.c
++++ b/mingw-w64-libraries/winpthreads/src/thread.c
+@@ -1484,7 +1484,7 @@ pthread_create_wrapper (void *args)
+ 	  "\t.seh_handlerdata\n"
+ 	  "\t.long 1\n"
+ 	  "\t.rva .tl_start, .tl_end, _gnu_exception_handler ,.tl_end\n"
+-	  "\t.text"
++	  "\t.section .text$pthread_create_wrapper"
+ 	  );
+       #endif      /* Call function and save return value */
+       pthread_mutex_unlock (&mtx_pthr_locked);

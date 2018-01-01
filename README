@@ -1,0 +1,65 @@
+MinGW-W64 工具链自动编译脚本
+
+本工具用于自动编译指定的 MinGW-W64 工具链，可以同时生成运行于本机系统 (Build system) 和 Windows 系统的两套工具链
+
+具体编译规则指定于 .config 中
+defconfig 目录包含一些预定义的规则，将其复制到脚本根目录并改名为 .config 后即可编译
+
+编译方式：
+	make
+或
+	make -j<N>
+
+编译生成的工具链位于 output 目录中
+
+.config 说明：
+TARGET	工具链的 target (--target=$(TARGET))，只能是 x86_64-w64-mingw32 或者 i[3456]86-w64-mingw32
+HOST	工具链的 Windows 运行环境 (--host=$(HOST))。如果 HOST 与 TARGET 不同，则需要 PATH 中存在此运行环境的工具链相关目录。
+PREFIX	工具链的运行前缀。i[3456]86 系统建议使用 /mingw32；x86_64 系统建议使用 /mingw64
+TARGET_GCC_FLAGS	编译 GCC 时传入的额外 configure 参数
+THREAD_MODEL	工具链使用线程模型，可以是 win32 或 posix。使用 win32 时可能会缺少部分 C++11 特性；使用 posix 需要附带 winpthreads 库
+EXCEPTION_MODEL	C++ 异常模型。对于 i[3456]86 系统，可以是 sjlj 或者 dw2；对于 x86_64 系统，可以是 sjlj 或者 seh。x86_64 建议使用 seh。
+LIBC_DEBUG	C 库是否包含调试信息（不影响优化）（可选值是 y 或者留空）
+TARGET_CFLAGS	编译目标平台运行库的额外 CFLAGS,也应用于 CXXFLAGS
+TARGET_LDFLAGS	编译目标平台运行库的额外 LDFLAGS
+
+生成的工具链位置：
+运行于本机系统的工具链位于 output/$(TARGET)-$(EXCEPTION_MODEL)-thread_$(THREAD_MODEL)/host-$(BUILD)/toolchain/usr
+运行于 Windows 环境的工具链位于 output/$(TARGET)-$(EXCEPTION_MODEL)-thread_$(THREAD_MODEL)/host-$(HOST)/target
+
+其它说明：
+如果软件包下载失败，请手动下载后放入 dl 目录
+
+===============================================================================
+
+Auto-build scripts for MInGW-W64 toolchain
+
+This tool is used to build specific MinGW-W64 toolchains. It can produce a toolchain running under the build system and a toolchain running under Windows
+
+The build rules are set in .config
+The folder defconfig contains some pre-defined configuration files. You can copy one of them in to the build root and rename it to .config to build.
+
+How to build:
+	make
+or
+	make -j<N>
+
+The output toolchains are stored in the folder 'output'.
+
+.config description:
+TARGET	Target (GNU tirplet) for the toolchain (--target=$(TARGET)). Valids are x86_64-w64-mingw32 and i[3456]86-w64-mingw32
+HOST	Host (not the build system, GNU triplet) for the toolchain (--host=$(HOST)). If HOST is different from TARGET, pre-built toolchain for the host is required
+PREFIX	Directory prefix. /mingw32 for i[3456]86-w64-mingw32 and /mingw64 for x86_64-w64-mingw32
+TARGET_GCC_FLAGS	Extra arguments passed to the GCC configure script
+THREAD_MODEL	The thread model used by toolchain. Valids are win32 and posix. It may lack some C++11 features using win32. However using posix results using an additional winpthread library
+EXCEPTION_MODEL	C++ exception model. sjls / dw2 for i[3456]86-w64-mingw32 and sjlj / seh for x86_64-w64-mingw32. seh is recommended for x86_64-w64-mingw32
+LIBC_DEBUG	Whether to include debug symbols in C library ('y' for Yes, empty for No)
+TARGET_CFLAGS	Extra CFLAGS passed to target library builds (also applied to CXXFLAGS)
+TARGET_LDFLAGS	Extra LDFLAGS passed to target library builds
+
+Path of generated toolchains:
+Running on build system: output/$(TARGET)-$(EXCEPTION_MODEL)-thread_$(THREAD_MODEL)/host-$(BUILD)/toolchain/usr
+Running on $(HOST): output/$(TARGET)-$(EXCEPTION_MODEL)-thread_$(THREAD_MODEL)/host-$(HOST)/target
+
+Others:
+If the source code archive is failed to download, you can download it manually and copy to the folder 'dl'.
