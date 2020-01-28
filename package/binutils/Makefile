@@ -16,12 +16,10 @@ CONFIGURE_ARGS= \
 	--disable-nls \
 	--enable-ld \
 	--enable-lto \
-	--with-sysroot=$(SYSROOT_PREFIX) \
-	--with-gmp=$(HOST_OUTPUT_PREFIX) \
-	--with-mpfr=$(HOST_OUTPUT_PREFIX) \
-	--with-mpc=$(HOST_OUTPUT_PREFIX) \
-	--with-isl=$(HOST_OUTPUT_PREFIX) \
-	--with-cloog=$(HOST_OUTPUT_PREFIX)
+	--with-sysroot=$(SYSROOT_PREFIX)
+
+LIBS_CFLAGS := -I$(HOST_OUTPUT_PREFIX)/include
+LIBS_LDFLAGS := -L$(HOST_OUTPUT_PREFIX)/lib
 
 ifeq ($(BUILD_TYPE),toolchain)
 TOOLCHAIN_MINGW_PREFIX = -DMINGW_NATIVE_PREFIX='\\\\\\\"$(NATIVE_PREFIX)\\\\\\\"'
@@ -53,8 +51,8 @@ configure: extract
 	[ -f $(PACKAGE_BUILD_DIR)/.configured ] || ( \
 		mkdir -p $(PACKAGE_BUILD_DIR); \
 		cd $(PACKAGE_BUILD_DIR); \
-		CFLAGS="$(PKG_CFLAGS) $(TOOLCHAIN_MINGW_PREFIX)" \
-		LDFLAGS="$(PKG_LDFLAGS)" \
+		CFLAGS="$(PKG_CFLAGS) $(LIBS_CFLAGS) $(TOOLCHAIN_MINGW_PREFIX)" \
+		LDFLAGS="$(PKG_LDFLAGS) $(LIBS_LDFLAGS)" \
 		$(HOST_CONFIGURE_ENVS) \
 			$(PACKAGE_SOURCE_DIR)/configure $(CONFIGURE_ARGS) && \
 		touch $(PACKAGE_BUILD_DIR)/.configured \

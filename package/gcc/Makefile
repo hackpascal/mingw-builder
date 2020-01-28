@@ -11,11 +11,6 @@ CONFIGURE_ARGS= \
 	--prefix=$(PREFIX) \
 	--target=$(TARGET) \
 	$(if $(HOST),--host=$(HOST)) \
-	--with-gmp=$(HOST_OUTPUT_PREFIX) \
-	--with-mpfr=$(HOST_OUTPUT_PREFIX) \
-	--with-mpc=$(HOST_OUTPUT_PREFIX) \
-	--with-isl=$(HOST_OUTPUT_PREFIX) \
-	--with-cloog=$(HOST_OUTPUT_PREFIX) \
 	--disable-multilib \
 	--enable-version-specific-runtime-libs \
 	--enable-fully-dynamic-string \
@@ -27,6 +22,9 @@ CONFIGURE_ARGS= \
 	--with-libiconv \
 	--without-system-zlib \
 	$(TARGET_GCC_FLAGS)
+
+LIBS_CFLAGS := -I$(HOST_OUTPUT_PREFIX)/include
+LIBS_LDFLAGS := -L$(HOST_OUTPUT_PREFIX)/lib
 
 ifeq ($(BUILD_TYPE),toolchain)
 CONFIGURE_ARGS += \
@@ -96,9 +94,9 @@ configure: extract
 	[ -f $(PACKAGE_BUILD_DIR)/.configured ] || ( \
 		mkdir -p $(PACKAGE_BUILD_DIR); \
 		cd $(PACKAGE_BUILD_DIR); \
-		CFLAGS="$(HOST_CFLAGS) -DMINGW_NATIVE_PREFIX='\\\\\\\"$(NATIVE_PREFIX)\\\\\\\"'" \
-		CXXFLAGS="$(HOST_CFLAGS) -DMINGW_NATIVE_PREFIX='\\\\\\\"$(NATIVE_PREFIX)\\\\\\\"'" \
-		LDFLAGS="$(HOST_LDFLAGS)" \
+		CFLAGS="$(HOST_CFLAGS) $(LIBS_CFLAGS) -DMINGW_NATIVE_PREFIX='\\\\\\\"$(NATIVE_PREFIX)\\\\\\\"'" \
+		CXXFLAGS="$(HOST_CFLAGS) $(LIBS_CFLAGS) -DMINGW_NATIVE_PREFIX='\\\\\\\"$(NATIVE_PREFIX)\\\\\\\"'" \
+		LDFLAGS="$(HOST_LDFLAGS) $(LIBS_LDFLAGS)" \
 		CFLAGS_FOR_TARGET="$(TARGET_CFLAGS) $(GCC_DEBUG_CFLAGS)" \
 		CXXFLAGS_FOR_TARGET="$(TARGET_CFLAGS) $(GCC_DEBUG_CFLAGS)" \
 		LDFLAGS_FOR_TARGET="$(TARGET_LDFLAGS)" \
@@ -124,12 +122,13 @@ configure: extract
 		cd $(PACKAGE_BUILD_DIR); \
 		enable_gnu_indirect_function=yes \
 		default_gnu_indirect_function=yes \
-		CFLAGS="$(TARGET_CFLAGS) $(GCC_DEBUG_CFLAGS)" \
-		LDFLAGS="$(TARGET_LDFLAGS) $(GCC_DEBUG_CFLAGS)" \
-		CFLAGS_FOR_TARGET="$(TARGET_CFLAGS) $(GCC_DEBUG_CFLAGS) -isystem /include -L$(INSTALL_DESTDIR)$(PREFIX)/lib" \
-		CXXFLAGS_FOR_TARGET="$(TARGET_CFLAGS) $(GCC_DEBUG_CFLAGS)" \
+		CFLAGS="$(TARGET_CFLAGS) $(LIBS_CFLAGS) $(GCC_DEBUG_CFLAGS)" \
+		CXXFLAGS="$(TARGET_CFLAGS) $(LIBS_CFLAGS) $(GCC_DEBUG_CFLAGS)" \
+		LDFLAGS="$(TARGET_LDFLAGS) $(LIBS_LDFLAGS) $(GCC_DEBUG_CFLAGS)" \
+		CFLAGS_FOR_TARGET="$(TARGET_CFLAGS) $(LIBS_CFLAGS) $(GCC_DEBUG_CFLAGS) -isystem /include -L$(INSTALL_DESTDIR)$(PREFIX)/lib" \
+		CXXFLAGS_FOR_TARGET="$(TARGET_CFLAGS) $(LIBS_CFLAGS) $(GCC_DEBUG_CFLAGS)" \
 		$(MINGW_HOST_CONFIGURE_ENVS) \
-		LDFLAGS_FOR_TARGET="$(TARGET_LDFLAGS)" \
+		LDFLAGS_FOR_TARGET="$(TARGET_LDFLAGS) $(LIBS_LDFLAGS)" \
 		CC_FOR_TARGET="$(TOOLCHAIN_PREFIX)gcc" \
 		CXX_FOR_TARGET="$(TOOLCHAIN_PREFIX)g++" \
 		AR_FOR_TARGET="$(TOOLCHAIN_PREFIX)ar" \
