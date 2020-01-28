@@ -1,6 +1,6 @@
 
 NAME=mingw-w64
-VERSION=v5.0.3
+VERSION=v7.0.0
 SOURCE_FILE=$(NAME)-$(VERSION).tar.bz2
 URL=https://sourceforge.net/projects/mingw-w64/files/mingw-w64/mingw-w64-release/$(SOURCE_FILE)/download
 

@@ -1,8 +1,8 @@
 
 NAME=gcc
-VERSION=7.2.0
+VERSION=7.5.0
 SOURCE_FILE=$(NAME)-$(VERSION).tar.xz
-URL=https://ftp.gnu.org/gnu/$(NAME)/$(SOURCE_FILE)
+URL=https://ftp.gnu.org/gnu/$(NAME)/$(NAME)-$(VERSION)/$(SOURCE_FILE)
 
 PACKAGE_SOURCE_DIR=$(BUILD_SOURCE_DIR)/$(NAME)-$(VERSION)
 PACKAGE_BUILD_DIR_COMMON=$(BUILD_DIR)/$(NAME)-$(VERSION)
@@ -16,18 +16,13 @@ CONFIGURE_ARGS= \
 	--with-mpc=$(HOST_OUTPUT_PREFIX) \
 	--with-isl=$(HOST_OUTPUT_PREFIX) \
 	--with-cloog=$(HOST_OUTPUT_PREFIX) \
-	--disable-__cxa_atexit \
 	--disable-multilib \
-	--disable-libssp \
-	--disable-libmudflap \
+	--disable-linker-build-id \
 	--enable-version-specific-runtime-libs \
 	--enable-fully-dynamic-string \
 	--enable-gnu-unique-object \
-	--enable-linker-build-id \
 	--enable-c99 \
 	--enable-clocale=gnu \
-	--enable-long-long \
-	--enable-decimal-float \
 	--with-gnu-ld \
 	--with-gnu-as \
 	--with-libiconv \
@@ -91,7 +86,7 @@ extract: download
 	[ -f $(PACKAGE_SOURCE_DIR)/.extracted ] || ( \
 		mkdir -p $(PACKAGE_SOURCE_DIR); \
 		tar -Jxf $(DLDIR)/$(SOURCE_FILE) -C $(BUILD_SOURCE_DIR) && \
-		for f in $$(ls ./patches/*.patch ./patches/*.diff); do patch -d $(PACKAGE_SOURCE_DIR) -p1 < $$f; done; \
+		for f in $$(ls ./patches/*.patch ./patches/*.diff); do patch -d $(PACKAGE_SOURCE_DIR) -p1 < $$f || exit 1; done; \
 		touch $(PACKAGE_SOURCE_DIR)/.extracted \
 	)
 

@@ -1,6 +1,6 @@
 
 NAME=gdb
-VERSION=8.0.1
+VERSION=8.3.1
 SOURCE_FILE=$(NAME)-$(VERSION).tar.xz
 URL=https://ftp.gnu.org/gnu/$(NAME)/$(SOURCE_FILE)
 
@@ -17,6 +17,11 @@ CONFIGURE_ARGS= \
 	--with-mpfr=$(HOST_OUTPUT_PREFIX) \
 	--with-mpc=$(HOST_OUTPUT_PREFIX) \
 	--with-isl=$(HOST_OUTPUT_PREFIX)
+
+ifeq ($(BUILD_TYPE),target)
+PKG_CFLAGS= -fstack-protector
+PKG_CXXFLAGS= -fstack-protector
+endif
 
 all: install
 	true
@@ -37,7 +42,9 @@ configure: extract
 		mkdir -p $(PACKAGE_BUILD_DIR); \
 		cd $(PACKAGE_BUILD_DIR); \
 		CFLAGS="$(PKG_CFLAGS)" \
+		CXXFLAGS="$(PKG_CXXFLAGS)" \
 		LDFLAGS="$(PKG_LDFLAGS)" \
+		LIBS="$(PKG_LIBS)" \
 		$(HOST_CONFIGURE_ENVS) \
 			$(PACKAGE_SOURCE_DIR)/configure $(CONFIGURE_ARGS) && \
 		touch $(PACKAGE_BUILD_DIR)/.configured \

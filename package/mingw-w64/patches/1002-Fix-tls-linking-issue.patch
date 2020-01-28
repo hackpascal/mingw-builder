@@ -1,0 +1,43 @@
+From f7f4909a6186222887ec669616a00a4328049431 Mon Sep 17 00:00:00 2001
+From: Weijie Gao <hackpascal@gmail.com>
+Date: Tue, 28 Jan 2020 22:35:54 +0800
+Subject: [PATCH] Fix tls linking issue
+
+Since v6.0.0, the tlssup has removed _tls_used from the section .tls.
+
+However ld will try to write TLS directory to point its RVA to a struct
+type IMAGE_TLS_DIRECTORY, i.e. _tls_used.
+
+If a program uses no TLS, section .tls will not exist. The RVA of the TLS
+directory will point to a negative offset, and will cause a c0000005
+exception on startup.
+
+This patch reverts this modification to solve this issue.
+
+---
+ mingw-w64-crt/crt/tlssup.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/mingw-w64-crt/crt/tlssup.c b/mingw-w64-crt/crt/tlssup.c
+index 582fa85..5793d0b 100644
+--- a/mingw-w64-crt/crt/tlssup.c
++++ b/mingw-w64-crt/crt/tlssup.c
+@@ -38,13 +38,13 @@ ULONG _tls_index = 0;
+    We use here pointer-types for start/end so that tls-data remains
+    aligned on pointer-size-width.  This seems to be required for
+    pe-loader. */
+-_CRTALLOC(".tls") char *_tls_start = NULL;
++_CRTALLOC(".tls$AAA") char *_tls_start = NULL;
+ _CRTALLOC(".tls$ZZZ") char *_tls_end = NULL;
+ 
+ _CRTALLOC(".CRT$XLA") PIMAGE_TLS_CALLBACK __xl_a = 0;
+ _CRTALLOC(".CRT$XLZ") PIMAGE_TLS_CALLBACK __xl_z = 0;
+ 
+-const IMAGE_TLS_DIRECTORY _tls_used = {
++_CRTALLOC(".tls") const IMAGE_TLS_DIRECTORY _tls_used = {
+   (ULONG_PTR) &_tls_start, (ULONG_PTR) &_tls_end,
+   (ULONG_PTR) &_tls_index, (ULONG_PTR) (&__xl_a+1),
+   (ULONG) 0, (ULONG) 0
+-- 
+2.17.1
+
