@@ -106,10 +106,7 @@ mpc: gmp mpfr
 isl: gmp
 	$(MAKE) -C $(PACKAGEDIR)/isl
 
-cloog: gmp isl
-	$(MAKE) -C $(PACKAGEDIR)/cloog
-
-binutils: gmp mpfr mpc isl cloog
+binutils: gmp mpfr mpc isl
 	$(MAKE) -C $(PACKAGEDIR)/binutils
 
 dir-prep:
@@ -130,7 +127,7 @@ ifeq ($(BUILD_TYPE),toolchain)
 mingw-w64-headers: dir-prep mingw-w64-tools gcc-initial
 	$(MAKE) -C $(PACKAGEDIR)/mingw-w64 PART=headers
 
-gcc-initial: gmp mpfr mpc isl cloog binutils
+gcc-initial: gmp mpfr mpc isl binutils
 	$(MAKE) -C $(PACKAGEDIR)/gcc STAGE=initial
 else
 mingw-w64-headers: dir-prep mingw-w64-tools
