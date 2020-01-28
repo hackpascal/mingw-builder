@@ -1,6 +1,17 @@
+From 73c93b9b4581e49217715b96901c5c2b4c6c63e3 Mon Sep 17 00:00:00 2001
+From: Weijie Gao <hackpascal@gmail.com>
+Date: Tue, 28 Jan 2020 16:35:01 +0800
+Subject: [PATCH 12/14] Don't hardcode mingw's native system header directory
+
+---
+ gcc/config/i386/mingw32.h | 5 -----
+ 1 file changed, 5 deletions(-)
+
+diff --git a/gcc/config/i386/mingw32.h b/gcc/config/i386/mingw32.h
+index 5f36909a8..bea14d9e0 100644
 --- a/gcc/config/i386/mingw32.h
 +++ b/gcc/config/i386/mingw32.h
-@@ -169,11 +169,6 @@ along with GCC; see the file COPYING3.
+@@ -169,11 +169,6 @@ along with GCC; see the file COPYING3.  If not see
  #define STANDARD_STARTFILE_PREFIX_2 ""
  #endif
  
@@ -12,3 +23,6 @@
  /* Output STRING, a string representing a filename, to FILE.
     We canonicalize it to be in Unix format (backslashes are replaced
     forward slashes.  */
+-- 
+2.17.1
+

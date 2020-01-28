@@ -1,0 +1,35 @@
+
+---
+ configure | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/configure b/configure
+index 37476459..80d9caaa 100755
+--- a/configure
++++ b/configure
+@@ -2997,6 +2997,7 @@ case "${ENABLE_GOLD}" in
+   yes|default)
+     # Check for ELF target.
+     is_elf=no
++    is_pe=no
+     case "${target}" in
+       *-*-elf* | *-*-sysv4* | *-*-unixware* | *-*-eabi* | hppa*64*-*-hpux* \
+       | *-*-linux* | *-*-gnu* | frv-*-uclinux* | *-*-irix5* | *-*-irix6* \
+@@ -3008,10 +3009,12 @@ case "${ENABLE_GOLD}" in
+           *)
+             is_elf=yes
+             ;;
+-        esac
++        esac;;
++      *-*-mingw*)
++        is_pe=yes;;
+     esac
+ 
+-    if test "$is_elf" = "yes"; then
++    if test "$is_elf" = "yes" -o "$is_pe" = "yes"; then
+       # Check for target supported by gold.
+       case "${target}" in
+         i?86-*-* | x86_64-*-* | sparc*-*-* | powerpc*-*-* | arm*-*-* \
+-- 
+2.17.1
+

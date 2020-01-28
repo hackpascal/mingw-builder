@@ -17,7 +17,6 @@ CONFIGURE_ARGS= \
 	--with-isl=$(HOST_OUTPUT_PREFIX) \
 	--with-cloog=$(HOST_OUTPUT_PREFIX) \
 	--disable-multilib \
-	--disable-linker-build-id \
 	--enable-version-specific-runtime-libs \
 	--enable-fully-dynamic-string \
 	--enable-gnu-unique-object \
@@ -39,7 +38,8 @@ ifeq ($(TARGET),$(HOST))
 CONFIGURE_ARGS += \
 	--with-sysroot=$(SYSROOT_PREFIX) \
 	--with-native-system-header-dir=/include
-MINGW_HOST_CONFIGURE_ENVS := $(HOST_CONFIGURE_ENVS)
+MINGW_HOST_CONFIGURE_ENVS := $(HOST_CONFIGURE_ENVS) \
+	BUILD_TIME_INSTALL_DIR="$(INSTALL_DESTDIR)"
 else
 CONFIGURE_ARGS += \
 	--with-sysroot=$(SYSROOT_PREFIX) \
@@ -51,7 +51,8 @@ MINGW_HOST_CONFIGURE_ENVS := \
 	AS="$(HOST)-as" \
 	LD="$(HOST)-ld" \
 	STRIP="$(HOST)-strip" \
-	RANLIB="$(HOST)-ranlib"
+	RANLIB="$(HOST)-ranlib" \
+	BUILD_TIME_INSTALL_DIR="$(INSTALL_DESTDIR)"
 endif
 endif
 
@@ -125,7 +126,7 @@ configure: extract
 		default_gnu_indirect_function=yes \
 		CFLAGS="$(TARGET_CFLAGS) $(GCC_DEBUG_CFLAGS)" \
 		LDFLAGS="$(TARGET_LDFLAGS) $(GCC_DEBUG_CFLAGS)" \
-		CFLAGS_FOR_TARGET="$(TARGET_CFLAGS) $(GCC_DEBUG_CFLAGS)" \
+		CFLAGS_FOR_TARGET="$(TARGET_CFLAGS) $(GCC_DEBUG_CFLAGS) -isystem /include -L$(INSTALL_DESTDIR)$(PREFIX)/lib" \
 		CXXFLAGS_FOR_TARGET="$(TARGET_CFLAGS) $(GCC_DEBUG_CFLAGS)" \
 		$(MINGW_HOST_CONFIGURE_ENVS) \
 		LDFLAGS_FOR_TARGET="$(TARGET_LDFLAGS)" \

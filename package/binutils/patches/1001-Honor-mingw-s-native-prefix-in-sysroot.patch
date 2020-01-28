@@ -1,6 +1,17 @@
+From 821706e44170ce2c42b3a5ed3fdad85d21f8ebca Mon Sep 17 00:00:00 2001
+From: Weijie Gao <hackpascal@gmail.com>
+Date: Tue, 28 Jan 2020 20:40:34 +0800
+Subject: Honor mingw's native prefix in sysroot
+
+---
+ ld/ldmain.c | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
+
+diff --git a/ld/ldmain.c b/ld/ldmain.c
+index 77cdbd0d..bdd656a7 100644
 --- a/ld/ldmain.c
 +++ b/ld/ldmain.c
-@@ -572,6 +572,31 @@ get_relative_sysroot (const char *from A
+@@ -568,6 +568,31 @@ get_relative_sysroot (const char *from ATTRIBUTE_UNUSED)
    char *path;
    struct stat s;
  
@@ -32,3 +43,6 @@
    path = make_relative_prefix (program_name, from, TARGET_SYSTEM_ROOT);
    if (path)
      {
+-- 
+2.17.1
+

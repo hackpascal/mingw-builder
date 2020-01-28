@@ -1,14 +1,27 @@
+From bd7435e9808f349d55bc87284916e3e45b5d19aa Mon Sep 17 00:00:00 2001
+From: Weijie Gao <hackpascal@gmail.com>
+Date: Tue, 28 Jan 2020 16:36:49 +0800
+Subject: [PATCH 13/14] Honor mingw's native prefix in sysroot
+
+---
+ gcc/gcc.c | 29 +++++++++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
+
+diff --git a/gcc/gcc.c b/gcc/gcc.c
+index 81ba83365..011918124 100644
 --- a/gcc/gcc.c
 +++ b/gcc/gcc.c
-@@ -7222,6 +7222,7 @@ int
+@@ -7224,6 +7224,9 @@ int
  driver::main (int argc, char **argv)
  {
    bool early_exit;
++#ifdef MINGW_NATIVE_PREFIX
 +  const char *toolchain_build;
++#endif
  
    set_progname (argv[0]);
    expand_at_files (&argc, &argv);
-@@ -7234,6 +7235,32 @@ driver::main (int argc, char **argv)
+@@ -7236,6 +7239,32 @@ driver::main (int argc, char **argv)
    maybe_putenv_OFFLOAD_TARGETS ();
    handle_unrecognized_options ();
  
@@ -41,3 +54,6 @@
    if (!maybe_print_and_exit ())
      return 0;
  
+-- 
+2.17.1
+
