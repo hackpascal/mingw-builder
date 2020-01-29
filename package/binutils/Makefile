@@ -16,6 +16,7 @@ CONFIGURE_ARGS= \
 	--disable-nls \
 	--enable-ld \
 	--enable-lto \
+	--with-system-zlib \
 	--with-sysroot=$(SYSROOT_PREFIX)
 
 LIBS_CFLAGS := -I$(HOST_OUTPUT_PREFIX)/include
@@ -52,6 +53,7 @@ configure: extract
 		mkdir -p $(PACKAGE_BUILD_DIR); \
 		cd $(PACKAGE_BUILD_DIR); \
 		CFLAGS="$(PKG_CFLAGS) $(LIBS_CFLAGS) $(TOOLCHAIN_MINGW_PREFIX)" \
+		CXXFLAGS="$(PKG_CFLAGS) $(LIBS_CFLAGS) $(TOOLCHAIN_MINGW_PREFIX)" \
 		LDFLAGS="$(PKG_LDFLAGS) $(LIBS_LDFLAGS)" \
 		$(HOST_CONFIGURE_ENVS) \
 			$(PACKAGE_SOURCE_DIR)/configure $(CONFIGURE_ARGS) && \

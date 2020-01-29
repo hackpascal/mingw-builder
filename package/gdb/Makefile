@@ -12,11 +12,14 @@ CONFIGURE_ARGS= \
 	--target=$(TARGET) \
 	$(if $(HOST),--host=$(HOST)) \
 	--disable-nls \
-	--without-system-zlib \
+	--with-system-zlib \
 	--with-gmp=$(HOST_OUTPUT_PREFIX) \
 	--with-mpfr=$(HOST_OUTPUT_PREFIX) \
 	--with-mpc=$(HOST_OUTPUT_PREFIX) \
 	--with-isl=$(HOST_OUTPUT_PREFIX)
+
+LIBS_CFLAGS := -I$(HOST_OUTPUT_PREFIX)/include
+LIBS_LDFLAGS := -L$(HOST_OUTPUT_PREFIX)/lib
 
 ifeq ($(BUILD_TYPE),target)
 PKG_CFLAGS= -fstack-protector
@@ -41,9 +44,9 @@ configure: extract
 	[ -f $(PACKAGE_BUILD_DIR)/.configured ] || ( \
 		mkdir -p $(PACKAGE_BUILD_DIR); \
 		cd $(PACKAGE_BUILD_DIR); \
-		CFLAGS="$(PKG_CFLAGS)" \
-		CXXFLAGS="$(PKG_CXXFLAGS)" \
-		LDFLAGS="$(PKG_LDFLAGS)" \
+		CFLAGS="$(PKG_CFLAGS) $(LIBS_CFLAGS)" \
+		CXXFLAGS="$(PKG_CXXFLAGS) $(LIBS_CFLAGS)" \
+		LDFLAGS="$(PKG_LDFLAGS) $(LIBS_LDFLAGS)" \
 		LIBS="$(PKG_LIBS)" \
 		$(HOST_CONFIGURE_ENVS) \
 			$(PACKAGE_SOURCE_DIR)/configure $(CONFIGURE_ARGS) && \

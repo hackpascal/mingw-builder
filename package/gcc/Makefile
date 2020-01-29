@@ -15,12 +15,9 @@ CONFIGURE_ARGS= \
 	--enable-version-specific-runtime-libs \
 	--enable-fully-dynamic-string \
 	--enable-gnu-unique-object \
-	--enable-c99 \
-	--enable-clocale=gnu \
 	--with-gnu-ld \
 	--with-gnu-as \
-	--with-libiconv \
-	--without-system-zlib \
+	--with-system-zlib \
 	$(TARGET_GCC_FLAGS)
 
 LIBS_CFLAGS := -I$(HOST_OUTPUT_PREFIX)/include

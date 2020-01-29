@@ -10,6 +10,7 @@ CONFIGURE_ARGS += \
 	--enable-static \
 	--enable-nls \
 	--enable-tls \
+	--enable-c99 \
 	--enable-threads=$(THREAD_MODEL) \
 	--enable-checking=release \
 	--enable-libstdcxx-debug \
