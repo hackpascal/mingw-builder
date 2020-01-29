@@ -94,6 +94,7 @@ ifeq ($(BUILD_TYPE),target)
 	-find $(OUTPUT_PREFIX)$(NATIVE_PREFIX)/bin -name '*.exe' -o -name '*.dll' | xargs $(HOST_TOOLCHAIN_PREFIX)strip
 	-find $(OUTPUT_PREFIX)$(NATIVE_PREFIX)/libexec -name '*.exe' -o -name '*.dll' | xargs $(HOST_TOOLCHAIN_PREFIX)strip
 	-find $(OUTPUT_PREFIX)$(NATIVE_PREFIX)/$(TARGET)/bin -name '*.exe' -o -name '*.dll' | xargs $(HOST_TOOLCHAIN_PREFIX)strip
+	find $(OUTPUT_PREFIX)$(NATIVE_PREFIX) -name '*.la' | xargs sed -i -e 's/-L$(subst /,\/,$(HOST_OUTPUT_PREFIX))\/lib//g' -e 's/$(subst /,\/,$(OUTPUT_PREFIX))//g'
 endif
 
 gmp:

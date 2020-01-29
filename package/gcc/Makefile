@@ -147,6 +147,7 @@ install: build
 		([ -d $(OUTPUT_PREFIX)$(NATIVE_PREFIX)/lib/gcc/$(TARGET)/lib ] && cp -a $(OUTPUT_PREFIX)$(NATIVE_PREFIX)/lib/gcc/$(TARGET)/lib/*.dll $(OUTPUT_SYSROOT_PREFIX)$(NATIVE_PREFIX)/bin/ || true) && \
 		([ -d $(OUTPUT_PREFIX)$(NATIVE_PREFIX)/lib/gcc/$(TARGET)/lib64 ] && cp -a $(OUTPUT_PREFIX)$(NATIVE_PREFIX)/lib/gcc/$(TARGET)/lib64/*.dll $(OUTPUT_SYSROOT_PREFIX)$(NATIVE_PREFIX)/bin/ || true) && \
 		([ -d $(OUTPUT_PREFIX)$(NATIVE_PREFIX)/lib/gcc/$(TARGET)/$(VERSION) ] && cp -a $(OUTPUT_PREFIX)$(NATIVE_PREFIX)/lib/gcc/$(TARGET)/$(VERSION)/*.dll $(OUTPUT_SYSROOT_PREFIX)$(NATIVE_PREFIX)/bin/ || true) && \
+		sed -i 's/$(subst /,\/,$(OUTPUT_PREFIX))//g' $(OUTPUT_PREFIX)$(NATIVE_PREFIX)/lib/gcc/$(TARGET)/$(VERSION)/install-tools/mkheaders.conf && \
 		touch $(PACKAGE_BUILD_DIR)/.installed \
 	)
 endif
