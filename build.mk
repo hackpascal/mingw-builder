@@ -22,7 +22,8 @@ export TARGET_CONFIGURE_ENVS := \
 	WINDRES="$(TOOLCHAIN_PREFIX)windres" \
 	DLLTOOL="$(TOOLCHAIN_PREFIX)dlltool" \
 	OBJCOPY="$(TOOLCHAIN_PREFIX)objcopy" \
-	OBJDUMP="$(TOOLCHAIN_PREFIX)objdump"
+	OBJDUMP="$(TOOLCHAIN_PREFIX)objdump" \
+	RC="$(TOOLCHAIN_PREFIX)windres"
 
 export _HOST_CONFIGURE_ENVS := \
 	CC="$(HOST)-gcc" \
@@ -37,7 +38,8 @@ export _HOST_CONFIGURE_ENVS := \
 	WINDRES="$(HOST)-windres" \
 	DLLTOOL="$(HOST)-dlltool" \
 	OBJCOPY="$(HOST)-objcopy" \
-	OBJDUMP="$(HOST)-objdump"
+	OBJDUMP="$(HOST)-objdump" \
+	RC="$(HOST)-windres"
 
 ifeq ($(BUILD_TYPE),toolchain)
 export OUTPUT_PREFIX:=$(TARGET_OUTPUT_DIR)/host-$(BUILD)/$(BUILD_TYPE)/usr
@@ -106,6 +108,12 @@ mpc: gmp mpfr
 isl: gmp
 	$(MAKE) -C $(PACKAGEDIR)/isl
 
+zlib:
+	$(MAKE) -C $(PACKAGEDIR)/zlib
+
+libiconv:
+	$(MAKE) -C $(PACKAGEDIR)/libiconv
+
 binutils: gmp mpfr mpc isl
 	$(MAKE) -C $(PACKAGEDIR)/binutils
 
@@ -127,7 +135,7 @@ ifeq ($(BUILD_TYPE),toolchain)
 mingw-w64-headers: dir-prep mingw-w64-tools gcc-initial
 	$(MAKE) -C $(PACKAGEDIR)/mingw-w64 PART=headers
 
-gcc-initial: gmp mpfr mpc isl binutils
+gcc-initial: gmp mpfr mpc isl zlib libiconv binutils
 	$(MAKE) -C $(PACKAGEDIR)/gcc STAGE=initial
 else
 mingw-w64-headers: dir-prep mingw-w64-tools
@@ -137,7 +145,7 @@ endif
 mingw-w64-winpthreads: mingw-w64-crt
 	$(MAKE) -C $(PACKAGEDIR)/mingw-w64 PART=winpthreads
 
-gcc-final: binutils mingw-w64-crt mingw-w64-winpthreads
+gcc-final: zlib libiconv binutils mingw-w64-crt mingw-w64-winpthreads
 	$(MAKE) -C $(PACKAGEDIR)/gcc STAGE=final
 
 mingw-w64-libraries: gcc-final
