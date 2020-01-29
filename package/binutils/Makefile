@@ -16,6 +16,7 @@ CONFIGURE_ARGS= \
 	--disable-nls \
 	--enable-ld \
 	--enable-lto \
+	--enable-gold \
 	--with-system-zlib \
 	--with-sysroot=$(SYSROOT_PREFIX)
 

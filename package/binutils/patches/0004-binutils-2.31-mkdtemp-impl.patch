@@ -7,10 +7,11 @@ diff --git a/gold/plugin.cc b/gold/plugin.cc
 index 0bb277e1..5a671c65 100644
 --- a/gold/plugin.cc
 +++ b/gold/plugin.cc
-@@ -502,6 +502,117 @@ class Plugin_recorder
+@@ -502,6 +502,119 @@ class Plugin_recorder
    FILE* logfile_;
  };
  
++#if defined (__MINGW32__) || defined (__MINGW64__)
 +/* Use the widest available unsigned type if uint64_t is not
 +   available.  The algorithm below extracts a number less than 62**6
 +   (approximately 2**35.725) from uint64_t, so ancient hosts where
@@ -121,6 +122,7 @@ index 0bb277e1..5a671c65 100644
 +  else
 +    return Template;
 +}
++#endif
 +
  bool
  Plugin_recorder::init()
