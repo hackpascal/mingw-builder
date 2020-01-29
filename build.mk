@@ -91,9 +91,13 @@ export HOST_OUTPUT_PREFIX:=$(HOST_BUILD_DIR)/install
 
 all: mingw-w64-libraries gdb
 ifeq ($(BUILD_TYPE),target)
+ifeq ($(STRIP_ALL),y)
+	-find $(OUTPUT_PREFIX)$(NATIVE_PREFIX) -name '*.exe' -o -name '*.dll' -o -name '*.a' -o -name '*.o' | xargs $(HOST_TOOLCHAIN_PREFIX)strip
+else
 	-find $(OUTPUT_PREFIX)$(NATIVE_PREFIX)/bin -name '*.exe' -o -name '*.dll' | xargs $(HOST_TOOLCHAIN_PREFIX)strip
 	-find $(OUTPUT_PREFIX)$(NATIVE_PREFIX)/libexec -name '*.exe' -o -name '*.dll' | xargs $(HOST_TOOLCHAIN_PREFIX)strip
 	-find $(OUTPUT_PREFIX)$(NATIVE_PREFIX)/$(TARGET)/bin -name '*.exe' -o -name '*.dll' | xargs $(HOST_TOOLCHAIN_PREFIX)strip
+endif
 	find $(OUTPUT_PREFIX)$(NATIVE_PREFIX) -name '*.la' | xargs sed -i -e 's/-L$(subst /,\/,$(HOST_OUTPUT_PREFIX))\/lib//g' -e 's/$(subst /,\/,$(OUTPUT_PREFIX))//g'
 endif
 
