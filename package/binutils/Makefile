@@ -53,11 +53,12 @@ configure: extract
 	[ -f $(PACKAGE_BUILD_DIR)/.configured ] || ( \
 		mkdir -p $(PACKAGE_BUILD_DIR); \
 		cd $(PACKAGE_BUILD_DIR); \
+		ln -sf $(PACKAGE_SOURCE_DIR); \
 		CFLAGS="$(PKG_CFLAGS) $(LIBS_CFLAGS) $(TOOLCHAIN_MINGW_PREFIX)" \
 		CXXFLAGS="$(PKG_CFLAGS) $(LIBS_CFLAGS) $(TOOLCHAIN_MINGW_PREFIX)" \
 		LDFLAGS="$(PKG_LDFLAGS) $(LIBS_LDFLAGS)" \
 		$(HOST_CONFIGURE_ENVS) \
-			$(PACKAGE_SOURCE_DIR)/configure $(CONFIGURE_ARGS) && \
+			$(PACKAGE_SOURCE_DIR:$(BUILD_SOURCE_DIR)/%=%)/configure $(CONFIGURE_ARGS) && \
 		touch $(PACKAGE_BUILD_DIR)/.configured \
 	)
 

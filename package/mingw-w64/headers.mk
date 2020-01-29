@@ -15,7 +15,9 @@ configure: extract
 	[ -f $(PACKAGE_BUILD_DIR)/.configured ] || ( \
 		mkdir -p $(PACKAGE_BUILD_DIR); \
 		cd $(PACKAGE_BUILD_DIR); \
-		CFLAGS="$(TARGET_CFLAGS)" LDFLAGS="$(TARGET_LDFLAGS)" $(PACKAGE_SOURCE_DIR)/configure $(CONFIGURE_ARGS) && \
+		ln -sf $(MINGW_W64_SOURCE_DIR); \
+		CFLAGS="$(TARGET_CFLAGS)" LDFLAGS="$(TARGET_LDFLAGS)" \
+			$(PACKAGE_SOURCE_DIR:$(BUILD_SOURCE_DIR)/%=%)/configure $(CONFIGURE_ARGS) && \
 		touch $(PACKAGE_BUILD_DIR)/.configured \
 	)
 

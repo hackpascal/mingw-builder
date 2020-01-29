@@ -44,12 +44,13 @@ configure: extract
 	[ -f $(PACKAGE_BUILD_DIR)/.configured ] || ( \
 		mkdir -p $(PACKAGE_BUILD_DIR); \
 		cd $(PACKAGE_BUILD_DIR); \
+		ln -sf $(PACKAGE_SOURCE_DIR); \
 		CFLAGS="$(PKG_CFLAGS) $(LIBS_CFLAGS)" \
 		CXXFLAGS="$(PKG_CXXFLAGS) $(LIBS_CFLAGS)" \
 		LDFLAGS="$(PKG_LDFLAGS) $(LIBS_LDFLAGS)" \
 		LIBS="$(PKG_LIBS)" \
 		$(HOST_CONFIGURE_ENVS) \
-			$(PACKAGE_SOURCE_DIR)/configure $(CONFIGURE_ARGS) && \
+			$(PACKAGE_SOURCE_DIR:$(BUILD_SOURCE_DIR)/%=%)/configure $(CONFIGURE_ARGS) && \
 		touch $(PACKAGE_BUILD_DIR)/.configured \
 	)
 

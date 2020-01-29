@@ -23,10 +23,11 @@ configure: extract
 	[ -f $(PACKAGE_BUILD_DIR)/.configured ] || ( \
 		mkdir -p $(PACKAGE_BUILD_DIR); \
 		cd $(PACKAGE_BUILD_DIR); \
+		ln -sf $(MINGW_W64_SOURCE_DIR); \
 		CFLAGS="$(TARGET_CFLAGS) $(CRT_DEBUG_CFLAGS)" \
 		LDFLAGS="$(TARGET_LDFLAGS)" \
 		$(TARGET_CONFIGURE_ENVS) \
-			$(PACKAGE_SOURCE_DIR)/configure $(CONFIGURE_ARGS) && \
+			$(PACKAGE_SOURCE_DIR:$(BUILD_SOURCE_DIR)/%=%)/configure $(CONFIGURE_ARGS) && \
 		touch $(PACKAGE_BUILD_DIR)/.configured \
 	)
 
