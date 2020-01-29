@@ -62,7 +62,7 @@ build: configure
 
 install: build
 	[ -f $(PACKAGE_BUILD_DIR)/.installed ] || ( \
-		$(MAKE) -C $(PACKAGE_BUILD_DIR) install DESTDIR=$(INSTALL_DESTDIR) && \
+		$(MAKE) -C $(PACKAGE_BUILD_DIR) install-gdb DESTDIR=$(INSTALL_DESTDIR) && \
 		touch $(PACKAGE_BUILD_DIR)/.installed \
 	)
 
