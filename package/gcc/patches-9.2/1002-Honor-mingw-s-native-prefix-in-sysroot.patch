@@ -1,0 +1,59 @@
+From 89ebf2688141c18343a753f89821745590905542 Mon Sep 17 00:00:00 2001
+From: Weijie Gao <hackpascal@gmail.com>
+Date: Fri, 31 Jan 2020 00:34:02 +0800
+Subject: Honor mingw's native prefix in sysroot
+
+---
+ gcc/gcc.c | 29 +++++++++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
+
+diff --git a/gcc/gcc.c b/gcc/gcc.c
+index 4f57765b0..1bca66507 100644
+--- a/gcc/gcc.c
++++ b/gcc/gcc.c
+@@ -7348,6 +7348,9 @@ int
+ driver::main (int argc, char **argv)
+ {
+   bool early_exit;
++#ifdef MINGW_NATIVE_PREFIX
++  const char *toolchain_build;
++#endif
+ 
+   set_progname (argv[0]);
+   expand_at_files (&argc, &argv);
+@@ -7360,6 +7363,32 @@ driver::main (int argc, char **argv)
+   maybe_putenv_OFFLOAD_TARGETS ();
+   handle_unrecognized_options ();
+ 
++#ifdef MINGW_NATIVE_PREFIX
++  toolchain_build = env.get ("TOOLCHAIN_BUILD");
++  if (toolchain_build)
++    if (toolchain_build[0] != '1')
++      toolchain_build = NULL;
++
++  add_sysrooted_prefix (&startfile_prefixes,
++		       MINGW_NATIVE_PREFIX "/lib/", NULL,
++		       PREFIX_PRIORITY_LAST, 0, 0);
++
++  add_prefix (&startfile_prefixes,
++	     TARGET_SYSTEM_ROOT MINGW_NATIVE_PREFIX "/lib/", NULL,
++	     PREFIX_PRIORITY_LAST, 0, 0);
++
++  if (toolchain_build)
++    {
++      add_sysrooted_prefix (&include_prefixes,
++		           MINGW_NATIVE_PREFIX "/", NULL,
++		           PREFIX_PRIORITY_LAST, 0, 0);
++
++      add_prefix (&include_prefixes,
++	         TARGET_SYSTEM_ROOT MINGW_NATIVE_PREFIX "/", NULL,
++	         PREFIX_PRIORITY_LAST, 0, 0);
++    }
++#endif
++
+   if (completion)
+     {
+       m_option_proposer.suggest_completion (completion);
+-- 
+2.17.1
+
