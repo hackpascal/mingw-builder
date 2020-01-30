@@ -162,6 +162,6 @@ gcc-final: zlib libiconv binutils mingw-w64-crt mingw-w64-winpthreads
 mingw-w64-libraries: gcc-final
 	$(MAKE) -C $(PACKAGEDIR)/mingw-w64 PART=libraries
 
-gdb: mpfr expat xz
+gdb: mpfr expat xz zlib
 	$(MAKE) -C $(PACKAGEDIR)/gdb
 
