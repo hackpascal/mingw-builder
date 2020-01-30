@@ -11,7 +11,7 @@ CONFIGURE_ARGS= \
 	--prefix=$(PREFIX) \
 	--target=$(TARGET) \
 	$(if $(HOST),--host=$(HOST)) \
-	--disable-nls \
+	--enable-nls \
 	--with-system-zlib \
 	--with-gmp=$(HOST_OUTPUT_PREFIX) \
 	--with-mpfr=$(HOST_OUTPUT_PREFIX) \

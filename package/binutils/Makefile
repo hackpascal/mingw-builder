@@ -13,7 +13,7 @@ CONFIGURE_ARGS= \
 	$(if $(HOST),--host=$(HOST)) \
 	--enable-static \
 	--disable-shared \
-	--disable-nls \
+	--enable-nls \
 	--enable-ld \
 	--enable-lto \
 	--enable-gold \
